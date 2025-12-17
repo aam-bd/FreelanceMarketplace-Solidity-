@@ -79,7 +79,7 @@ contract FreelanceMarketplace {
         arbiter = msg.sender; // Deployer is the Arbiter
     }
 
-    // --- 1. User Registration [cite: 10-16] ---
+    // --- 1. User Registration ---
     function registerUser(string memory _name, uint8 _roleIndex) public {
         require(!users[msg.sender].isRegistered, "User already registered");
         
@@ -94,7 +94,7 @@ contract FreelanceMarketplace {
         }
 
         uint256 initialReputation = 0;
-        // Constraint: Freelancers start with 100 Reputation [cite: 15]
+        // Constraint: Freelancers start with 100 Reputation
         if (_role == Role.Freelancer) {
             initialReputation = 100;
         }
@@ -110,7 +110,7 @@ contract FreelanceMarketplace {
         emit UserRegistered(msg.sender, _name, _role);
     }
 
-    // --- 2. Post a Job [cite: 17-22] ---
+    // --- 2. Post a Job ---
     function postJob(string memory _title, string memory _category, uint256 _maxBudget, uint256 _deadline) public onlyRegistered onlyClient {
         jobCounter++;
         
@@ -129,14 +129,14 @@ contract FreelanceMarketplace {
         emit JobPosted(jobCounter, msg.sender, _title);
     }
 
-    // --- 3. Bidding System [cite: 23-28] ---
+    // --- 3. Bidding System ---
     function placeBid(uint256 _jobId, uint256 _bidAmount, string memory _proposedTime) public onlyRegistered onlyFreelancer {
         Job storage job = jobs[_jobId];
         
         require(job.status == JobStatus.Open, "Job is not open");
-        // Constraint: Bid Amount cannot exceed Client's Max Budget [cite: 27]
+        // Constraint: Bid Amount cannot exceed Client's Max Budget
         require(_bidAmount <= job.maxBudget, "Bid exceeds budget");
-        // Constraint: Reputation must be >= 50 [cite: 28]
+        // Constraint: Reputation must be >= 50 
         require(users[msg.sender].reputation >= 50, "Reputation too low to bid");
 
         jobBids[_jobId].push(Bid({
@@ -149,7 +149,7 @@ contract FreelanceMarketplace {
         emit BidPlaced(_jobId, msg.sender, _bidAmount);
     }
 
-    // --- 4. Hire & Escrow [cite: 29-34] ---
+    // --- 4. Hire & Escrow ---
     function hireFreelancer(uint256 _jobId, uint256 _bidIndex) public payable onlyRegistered onlyClient {
         Job storage job = jobs[_jobId];
         require(job.client == msg.sender, "Only the job owner can hire");
@@ -157,7 +157,7 @@ contract FreelanceMarketplace {
         
         Bid memory selectedBid = jobBids[_jobId][_bidIndex];
         
-        // Constraint: Must send exact Bid Amount [cite: 31, 34]
+        // Constraint: Must send exact Bid Amount
         require(msg.value == selectedBid.bidAmount, "Incorrect Ether amount sent");
 
         job.selectedFreelancer = selectedBid.freelancer;
@@ -167,7 +167,7 @@ contract FreelanceMarketplace {
         emit JobHired(_jobId, msg.sender, selectedBid.freelancer, msg.value);
     }
 
-    // --- 5. Work Submission & Completion [cite: 35-43] ---
+    // --- 5. Work Submission & Completion ---
     function submitWork(uint256 _jobId) public onlyRegistered onlyFreelancer {
         Job storage job = jobs[_jobId];
         require(job.selectedFreelancer == msg.sender, "You are not hired for this job");
@@ -185,7 +185,7 @@ contract FreelanceMarketplace {
         uint256 payout = job.lockedAmount;
         uint256 fee = 0;
 
-        // Constraint: Dynamic Fee [cite: 40-41]
+        // Constraint: Dynamic Fee
         if (payout < 1 ether) {
             fee = (payout * 2) / 100; // 2%
         } else {
@@ -199,7 +199,7 @@ contract FreelanceMarketplace {
         job.status = JobStatus.Closed;
         job.lockedAmount = 0;
 
-        // Update Reputation: +10 points [cite: 42]
+        // Update Reputation: +10 points
         users[job.selectedFreelancer].reputation += 10;
 
         // Transfer funds
@@ -208,7 +208,7 @@ contract FreelanceMarketplace {
         emit JobCompleted(_jobId, msg.sender, job.selectedFreelancer, fee);
     }
 
-    // --- 6. Dispute & Resolution [cite: 44-48] ---
+    // --- 6. Dispute & Resolution ---
     function disputeJob(uint256 _jobId) public onlyRegistered onlyClient {
         Job storage job = jobs[_jobId];
         require(job.client == msg.sender, "Only job owner can dispute");
@@ -227,7 +227,7 @@ contract FreelanceMarketplace {
         job.status = JobStatus.Resolved;
 
         if (_payFreelancer) {
-            // Case: Pay Freelancer (minus fees) [cite: 48]
+            // Case: Pay Freelancer (minus fees)
             uint256 fee;
             if (totalAmount < 1 ether) {
                 fee = (totalAmount * 2) / 100;
@@ -238,7 +238,7 @@ contract FreelanceMarketplace {
             payable(job.selectedFreelancer).transfer(totalAmount - fee);
             emit DisputeResolved(_jobId, "Freelancer Paid");
         } else {
-            // Case: Refund Client 100% [cite: 47]
+            // Case: Refund Client 100% 
             // Constraint: Freelancer Reputation -20 points
             if (users[job.selectedFreelancer].reputation >= 20) {
                 users[job.selectedFreelancer].reputation -= 20;
@@ -250,4 +250,5 @@ contract FreelanceMarketplace {
             emit DisputeResolved(_jobId, "Client Refunded");
         }
     }
+
 }
