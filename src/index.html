@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Freelance Marketplace - Decentralized Platform</title>
+    
+    <!-- Bootstrap -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            padding: 20px 0;
+        }
+        
+        .main-container {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            margin: 0 auto 30px;
+            padding: 30px;
+            max-width: 1200px;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid #667eea;
+        }
+        
+        .header h1 {
+            color: #667eea;
+            font-weight: bold;
+            margin-bottom: 5px;
+            font-size: 2.5em;
+        }
+        
+        .header p {
+            color: #6c757d;
+            font-size: 1.1em;
+        }
+        
+        .account-info {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            font-size: 0.95em;
+        }
+        
+        .role-badge {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            margin-left: 10px;
+            font-size: 0.9em;
+        }
+        
+        .role-client { background: #28a745; }
+        .role-freelancer { background: #17a2b8; }
+        .role-arbiter { background: #dc3545; }
+        
+        .nav-tabs {
+            border-bottom: 2px solid #667eea;
+            margin-bottom: 20px;
+            margin-top: 0;
+        }
+        
+        .nav-tabs .nav-link {
+            color: #667eea;
+            font-weight: 600;
+            padding: 12px 20px;
+            font-size: 1.05em;
+            cursor: pointer;
+        }
+        
+        .nav-tabs .nav-link.active {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+        
+        .nav-tabs .nav-link:hover {
+            border-color: #667eea;
+            background: rgba(102, 126, 234, 0.1);
+        }
+        
+        .nav-tabs .nav-link.active:hover {
+            background: #667eea;
+        }
+        
+        .tab-content {
+            padding-top: 0;
+            margin-top: 0;
+        }
+        
+        .tab-pane {
+            animation: fadeIn 0.3s;
+            padding-top: 0;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            padding: 10px 20px;
+            font-weight: 600;
+        }
+        
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+        
+        .btn-success {
+            font-weight: 600;
+        }
+        
+        .btn-warning {
+            font-weight: 600;
+        }
+        
+        .btn-danger {
+            font-weight: 600;
+        }
+        
+        .btn-info {
+            font-weight: 600;
+        }
+        
+        .card {
+            border: none;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+            margin-bottom: 15px;
+            transition: all 0.3s;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+        
+        .job-card {
+            border-left: 5px solid #667eea;
+        }
+        
+        .job-card.closed {
+            opacity: 0.7;
+            border-left-color: #6c757d;
+        }
+        
+        .card-body {
+            padding: 20px;
+        }
+        
+        .card-title {
+            color: #2c3e50;
+            font-weight: bold;
+            font-size: 1.3em;
+            margin-bottom: 15px;
+        }
+        
+        .card-text {
+            color: #555;
+            line-height: 1.8;
+        }
+        
+        .status-badge {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: bold;
+            display: inline-block;
+            margin-bottom: 10px;
+        }
+        
+        .status-open { 
+            background: #28a745; 
+            color: white;
+            box-shadow: 0 2px 8px rgba(40, 167, 69, 0.3);
+        }
+        .status-inprogress { 
+            background: #ffc107; 
+            color: #000;
+            box-shadow: 0 2px 8px rgba(255, 193, 7, 0.3);
+        }
+        .status-disputed { 
+            background: #dc3545; 
+            color: white;
+            box-shadow: 0 2px 8px rgba(220, 53, 69, 0.3);
+        }
+        .status-completed { 
+            background: #6c757d; 
+            color: white;
+        }
+        .status-closed { 
+            background: #343a40; 
+            color: white;
+        }
+        
+        .form-section {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #e9ecef;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .form-section h3, .form-section h4 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            font-weight: 600;
+            color: #495057;
+            margin-bottom: 8px;
+            display: block;
+            font-size: 1.05em;
+        }
+        
+        .form-control {
+            padding: 10px 15px;
+            border-radius: 8px;
+            border: 1px solid #ced4da;
+            font-size: 1em;
+            width: 100%;
+        }
+        
+        .form-control:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+        }
+        
+        select.form-control {
+            height: auto;
+            padding: 12px 40px 12px 15px;
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            background-image: url('data:image/svg+xml;charset=UTF-8,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="%23667eea" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"%3E%3Cpolyline points="6 9 12 15 18 9"%3E%3C/polyline%3E%3C/svg%3E');
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            background-size: 18px;
+            cursor: pointer;
+        }
+        
+        select.form-control option {
+            padding: 10px;
+            font-size: 1em;
+        }
+        
+        .bid-item {
+            background: white;
+            padding: 18px;
+            border-radius: 8px;
+            margin-bottom: 12px;
+            border-left: 4px solid #17a2b8;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+        
+        .loader {
+            text-align: center;
+            padding: 80px 20px;
+        }
+        
+        .spinner {
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #667eea;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .hidden { display: none !important; }
+        
+        .filter-sort-bar {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            padding: 15px 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #dee2e6;
+        }
+        
+        .filter-sort-bar label {
+            font-weight: 600;
+            color: #495057;
+            margin-bottom: 8px;
+        }
+        
+        .reputation-score {
+            color: #ffc107;
+            font-weight: bold;
+        }
+        
+        .escrow-badge {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            color: white;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 0.9em;
+            font-weight: bold;
+            display: inline-block;
+            margin-top: 5px;
+        }
+        
+        .alert {
+            border-radius: 10px;
+            padding: 15px 20px;
+        }
+        
+        .alert-info {
+            background: #e7f3ff;
+            border: 1px solid #b3d9ff;
+            color: #004085;
+        }
+        
+        .section-title {
+            color: #2c3e50;
+            font-weight: bold;
+            font-size: 1.6em;
+            margin-bottom: 20px;
+            margin-top: 0;
+            padding: 12px 20px;
+            border-bottom: 3px solid #667eea;
+            background: linear-gradient(to right, rgba(102, 126, 234, 0.1), transparent);
+            border-radius: 8px;
+            border-left: 5px solid #667eea;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #6c757d;
+        }
+        
+        .empty-state i {
+            font-size: 3em;
+            margin-bottom: 15px;
+            opacity: 0.5;
+        }
+        
+        .job-listings-container {
+            max-height: none;
+            overflow: visible;
+        }
+        
+        .modal-content {
+            border-radius: 15px;
+            border: none;
+        }
+        
+        .modal-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 15px 15px 0 0;
+        }
+        
+        .modal-title {
+            font-weight: bold;
+        }
+        
+        .close {
+            color: white;
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+    <div class="container main-container">
+        <!-- Header -->
+        <div class="header">
+            <h1>🚀 Freelance Marketplace</h1>
+            <p class="text-muted">Decentralized Freelance Platform on Blockchain</p>
+        </div>
+        
+        <!-- Loader -->
+        <div id="loader" class="loader">
+            <div class="spinner"></div>
+            <p class="mt-3">Connecting to Blockchain...</p>
+        </div>
+        
+        <!-- Main Content -->
+        <div id="mainContent" class="hidden">
+            <!-- Account Info -->
+            <div class="account-info">
+                <div id="accountDisplay"></div>
+            </div>
+            
+            <!-- Registration Section (for non-registered users) -->
+            <div id="registrationSection" class="hidden">
+                <div class="form-section">
+                    <h3 style="text-align: center;">📝 Register Your Account</h3>
+                    <p class="text-muted" style="text-align: center; margin-bottom: 30px;">You need to register before using the platform</p>
+                    <form id="registrationForm">
+                        <div class="form-group">
+                            <label for="regName">Your Name *</label>
+                            <input type="text" class="form-control" id="regName" placeholder="Enter your full name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="regRole">Select Your Role *</label>
+                            <select class="form-control" id="regRole" required>
+                                <option value="">-- Choose your role --</option>
+                                <option value="2">🏢 Client - I want to post jobs</option>
+                                <option value="3">💻 Freelancer - I want to work on jobs</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-lg btn-block" style="margin-top: 25px;">
+                            Register Now
+                        </button>
+                    </form>
+                </div>
+            </div>
+            
+            <!-- Dashboard Sections -->
+            <div id="dashboardSection" class="hidden">
+                <!-- Navigation Tabs -->
+                <ul class="nav nav-tabs" id="dashboardTabs" role="tablist">
+                    <li class="nav-item">
+                        <a class="nav-link active" id="marketplace-tab" data-toggle="tab" href="#marketplace" role="tab">
+                            🛒 Job Marketplace
+                        </a>
+                    </li>
+                    <li class="nav-item" id="clientTab" class="hidden">
+                        <a class="nav-link" id="client-tab" data-toggle="tab" href="#clientPanel" role="tab">
+                            💼 My Jobs (Client)
+                        </a>
+                    </li>
+                    <li class="nav-item" id="freelancerTab" class="hidden">
+                        <a class="nav-link" id="freelancer-tab" data-toggle="tab" href="#freelancerPanel" role="tab">
+                            💻 My Work (Freelancer)
+                        </a>
+                    </li>
+                    <li class="nav-item" id="arbiterTab" class="hidden">
+                        <a class="nav-link" id="arbiter-tab" data-toggle="tab" href="#arbiterPanel" role="tab">
+                            ⚖️ Arbiter Panel
+                        </a>
+                    </li>
+                </ul>
+                
+                <!-- Tab Content -->
+                <div class="tab-content" id="dashboardTabContent">
+                    <!-- Marketplace Tab -->
+                    <div class="tab-pane fade show active" id="marketplace" role="tabpanel">
+                        <!-- Post Job Form (Client Only) -->
+                        <div id="postJobSection" class="hidden form-section">
+                            <h4>📋 Post a New Job</h4>
+                            <form id="postJobForm">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label>Job Title *</label>
+                                            <input type="text" class="form-control" id="jobTitle" placeholder="e.g., Build a Website" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label>Category *</label>
+                                            <select class="form-control" id="jobCategory" required>
+                                                <option value="">-- Select Category --</option>
+                                                <option value="Web Development">Web Development</option>
+                                                <option value="Mobile App">Mobile App</option>
+                                                <option value="Design">Design</option>
+                                                <option value="Writing">Writing</option>
+                                                <option value="Marketing">Marketing</option>
+                                                <option value="Other">Other</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label>Max Budget (ETH) *</label>
+                                            <input type="number" step="0.01" class="form-control" id="jobBudget" placeholder="e.g., 1.5" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label>Deadline *</label>
+                                            <input type="date" class="form-control" id="jobDeadline" required>
+                                        </div>
+                                    </div>
+                                </div>
+                                <button type="submit" class="btn btn-primary">Post Job</button>
+                            </form>
+                        </div>
+                        
+                        <!-- Filter and Sort -->
+                        <div class="filter-sort-bar">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label>Filter by Category:</label>
+                                    <select class="form-control" id="filterCategory">
+                                        <option value="">All Categories</option>
+                                        <option value="Web Development">Web Development</option>
+                                        <option value="Mobile App">Mobile App</option>
+                                        <option value="Design">Design</option>
+                                        <option value="Writing">Writing</option>
+                                        <option value="Marketing">Marketing</option>
+                                        <option value="Other">Other</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
+                                    <label>Sort by:</label>
+                                    <select class="form-control" id="sortJobs">
+                                        <option value="budget_desc">Highest Budget First</option>
+                                        <option value="budget_asc">Lowest Budget First</option>
+                                        <option value="newest">Newest First</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Job Listings -->
+                        <div id="jobListings"></div>
+                    </div>
+                    
+                    <!-- Client Panel Tab -->
+                    <div class="tab-pane fade" id="clientPanel" role="tabpanel">
+                        <div class="section-title">📋 My Posted Jobs</div>
+                        <div id="clientJobs"></div>
+                    </div>
+                    
+                    <!-- Freelancer Panel Tab -->
+                    <div class="tab-pane fade" id="freelancerPanel" role="tabpanel">
+                        <div class="section-title">💼 My Work as Freelancer</div>
+                        <div id="freelancerJobs"></div>
+                    </div>
+                    
+                    <!-- Arbiter Panel Tab -->
+                    <div class="tab-pane fade" id="arbiterPanel" role="tabpanel">
+                        <div class="alert alert-info" style="font-size: 1.1em;">
+                            <strong>💰 Platform Fees Collected:</strong> <span id="platformFees" style="font-size: 1.3em; font-weight: bold;">0</span> ETH
+                        </div>
+                        <div class="section-title">⚖️ Disputed Jobs</div>
+                        <div id="disputedJobs"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modals -->
+    <!-- Job Details Modal -->
+    <div class="modal fade" id="jobDetailsModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalJobTitle">Job Details</h5>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body" id="modalJobContent">
+                    <!-- Dynamic content will be inserted here -->
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- jQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <!-- Bootstrap JS -->
+    <script src="js/bootstrap.min.js"></script>
+    <!-- Web3 -->
+    <script src="js/web3.min.js"></script>
+    <!-- Truffle Contract -->
+    <script src="js/truffle-contract.js"></script>
+    <!-- App JS -->
+    <script src="js/app.js"></script>
+</body>
+</html>
